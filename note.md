@@ -217,14 +217,16 @@ df.iloc['index_seq','column']# 同上
 
 ## 重命名索引值、列名
 
-frame9.rename(index,columns,inplace=False) # 默认不替换原数据
+df.rename(index,columns,inplace=False) # 默认不替换原数据
 
-frame9.rename(index={1:'first'},columns={'item':'object'},inplace=True)
+df.rename(index={1:'first'},columns={'item':'object'},inplace=True)
 
 ##　寻找替换
 #＃ 然后需要再赋值给原来的表的列名才行
-df["列名"].str.replace("","")
+df["列名"].str.replace("","") # 替换数据中的字符
+df['列名'].replace("","") # 更改数据
 
+df.drop("", axis=0) # axis=0删除行，1，删除列
 ```
 
 ### 5.5 添加数据
@@ -286,7 +288,8 @@ df.sort_values(by=[1,2,column_name3,...], ascending=[True,False,True], inplace=T
 
 ```python
 # 统计
-df = df['colname'].value_counts()
+df = df['colname'].value_counts() 
+df = df['colname'].value_counts(normalize=False) # 是否归一化，也就是百分比形式, 默认False
 # 分组统计
 df = df.groupby('user_id')['song_id'].value_counts().to_frame('count').reset_index()
 ```
@@ -304,11 +307,25 @@ df.pivot('features','user_contig','feature_count') # 长 ——> 宽
 ```python
 expend=True # 返回一DataFrame
 expend=False # 返回列表
-df['colname'].str.split('pattern', expend=True [,n=..]) # 将表格中某一列以pattern分割n次，默认有多少分多少
+df['colname'].str.split('pattern', expand=True [,n=..]) # 将表格中某一列以pattern分割n次，默认有多少分多少
 df['colname'].str.rsplti(...) # 反向分割，参数同上
+```
+
+### 5.11 删除满足条件的列/行
+
+```python
+df.ix[:,~((df==1).all()|(df==0).all())]
+```
+
+### 5.12 数据透视表
+
+```python
+a = pd.read_clipboard(header=0, sep="\t")
+pd.pivot_table(a, index=['family'],columns=['HC>RA','p.signif'],values=['.y.'], aggfunc=[len], fill_value=0)
 ```
 ## 6、匿名函数
 
+C:/Users/yexia/Anaconda3/envs/rstudio/lib/R/library
 
 ```python
 #!/usr/bin/python3
@@ -491,7 +508,8 @@ git diff <hash1> <hash2> # 比较两个版本有什么差异
 # 撤销暂存区中，未提交的件
 git checkout -- <file-name> 
 
-
+# 添加新的远程地址
+git remote add origin ssh://serves@172.16.0.30/~/yafeng/.git
 ```
 
 
