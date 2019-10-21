@@ -315,6 +315,7 @@ df['colname'].str.rsplti(...) # 反向分割，参数同上
 
 ```python
 df.ix[:,~((df==1).all()|(df==0).all())]
+df.ix[:, (df != df.ix[0]).any()]
 ```
 
 ### 5.12 数据透视表
@@ -465,7 +466,11 @@ cp -r /share/data7/zhangy2/projects/2019-07-19/３.anno/*/*/*.sort.depth.log  ./
 qsub -cwd -l vf=20g,p=8 -q all.q -V  # 提交任务
 qhost -j # 查看节点状态
 nohup ./program > program.log 2>&1 & # nohup重定向
-
+```
+awk打印单引号，需要在双引号中使用一对单引号，转义的单引号
+awk使用system（）可以直接执行shell命令
+```shell
+find ./*/storage/bin_stats.analyze.tsv| awk -F "/" '{cmd="sed '\''s/^/"$2"\t/'\'' " $0;system(cmd)}' |le
 ```
 
 ## 10. conda
