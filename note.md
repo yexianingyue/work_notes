@@ -6,7 +6,7 @@
 
 ## 1、Python Matplotlib
 
-### 1.1、直方图绘制
+### 1.1、柱状图绘制
 
 ```python
 #!/usr/bin/python3
@@ -463,14 +463,7 @@ attributes
 ```shell
 # 递归复制多个目录的相同文件
 cp -r /share/data7/zhangy2/projects/2019-07-19/３.anno/*/*/*.sort.depth.log  ./
-qsub -cwd -l vf=20g,p=8 -q all.q -V  # 提交任务
-qhost -j # 查看节点状态
 nohup ./program > program.log 2>&1 & # nohup重定向
-```
-awk打印单引号，需要在双引号中使用一对单引号，转义的单引号
-awk使用system（）可以直接执行shell命令
-```shell
-find ./*/storage/bin_stats.analyze.tsv| awk -F "/" '{cmd="sed '\''s/^/"$2"\t/'\'' " $0;system(cmd)}' |le
 ```
 
 ## 10. conda
@@ -489,6 +482,12 @@ custom_channels:
   bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
   menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
   pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+```
+
+服务器设置
+```shell
+# 在登入时不激活环境
+conda config --set auto_activate_base false
 ```
 
 ## 11.Git
@@ -524,4 +523,49 @@ git remote add origin ssh://serves@172.16.0.30/~/yafeng/.git
 import numpy as np
 # 分割一维列表
 np.array_split(data, num) # 将data分割成几分
+```
+
+## 13、perl
+
+```perl
+# cpan 换源 /.cpan/CPAN/MyConfig.pm
+修改为： 'urllist' => [q[http://mirrors.aliyuncs.com/CPAN/]],
+```
+
+## 14、scp
+
+配置后传输还是出问题，是因为安全问题，将安全级别降到最低即可
+参考链接[点击这里](https://www.cnblogs.com/xingmuxin/p/8487665.html)
+```shell
+# 下载
+scp -o  stricthostkeychecking=no root@192.168.1.1:/path/  ./
+```
+
+## 15、VIM
+
+小技巧
+```vim
+:set nu
+:set ff "显示文件编码的方式dos/unix
+:set ff=unix "change the code to unix
+:r!command "插入命令行的输出内容
+:read <filename> " 在下面插入filename的内容
+:set cursorline  " 高亮当前行
+```
+
+## 16、qsub提交节点任务
+
+```shell
+qsub -cwd -l vf=20g,p=8 -q all.q -V  # 提交任务
+qhost -j # 查看节点状态
+qhold <job id>  # 挂起任务
+qrls  <jobid>   # 释放任务
+```
+
+## 17、awk
+
+awk打印单引号，需要在双引号中使用一对单引号，转义的单引号
+awk使用system（）可以直接执行shell命令
+```shell
+find ./*/storage/bin_stats.analyze.tsv| awk -F "/" '{cmd="sed '\''s/^/"$2"\t/'\'' " $0;system(cmd)}' |le
 ```
