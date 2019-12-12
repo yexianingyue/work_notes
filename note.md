@@ -2,13 +2,12 @@
 
 # __笔记__
 
-[TOC]
 
 ## 1、Python Matplotlib
 
 ### 1.1、柱状图绘制
 
-```python
+```python {cmd=true matplotlib=true}
 #!/usr/bin/python3
 
 import numpy as np
@@ -41,7 +40,6 @@ plt.xlabel("x")
 plt.title("random.randint")
 plt.show()
 ```
-![Pic-1.1.0](./Images/Strips/1.1.0.png)
 
 ### 1.2、饼图
 
@@ -87,7 +85,7 @@ import matplotlib.pyplot as plt
 
 ## 2、格式化输出
 
-[format]("https://www.runoob.com/python/att-string-format.html")
+[format](https://www.runoob.com/python/att-string-format.html)
 
 |数字|格式|输出|描述|
 |-|-|-|-|
@@ -519,10 +517,11 @@ git remote add origin ssh://serves@172.16.0.30/~/yafeng/.git
 
 ## 12. numpy
 
-```python
+```python {cmd=true}
 import numpy as np
+a = np.array([1,2,3,4,5,6])
 # 分割一维列表
-np.array_split(data, num) # 将data分割成几分
+print(np.array_split(a, 3)) # 将data分割成几分
 ```
 
 ## 13、perl
@@ -569,3 +568,58 @@ awk使用system（）可以直接执行shell命令
 ```shell
 find ./*/storage/bin_stats.analyze.tsv| awk -F "/" '{cmd="sed '\''s/^/"$2"\t/'\'' " $0;system(cmd)}' |le
 ```
+
+## 18、Windows技巧收集
+
+```shell
+文件名输入空格 Alt+0160
+```
+
+## 19、python基础包技巧
+
+
+1、反转字典键值对
+```python {cmd=true id='py1'}
+a = {1:'1', 2:'2'}
+print(dict(zip(a.values(), a.keys())))
+```
+
+2、创建自己的python包
+
+导入的包名为zy2，下面是具体的方法, 在setup.py中添加一下代码
+```python
+from distutils.core import setup
+
+setup(name='zy2', 
+        version='1.0',
+        author='YeXiaNingYue',
+        py_modules=['zy2.list_like', 'zy2.RandomTreeROC']# 包下面的名称)
+```
+然后在setup.py所在目录中运行
+```python
+python setup.py build
+python setup.py sdist
+```
+在dist目录中，会有一个打包的压缩包，pip install \<package> 即可安装
+![目录结构](./Images/only_add_do_not_del/the_file_tree_of_how_create_yourself_python_package.png)
+
+
+## 20、vscode技巧
+
+1、运行代码块 code-chunk
+````python
+使用插件Markdown Preview Enhanced 可以运行python、shell、R...代码
+举例：
+```python {cmd=true id='1'}
+a = {1:'1'}
+```
+python {cmd=true continue="1" id="2"} # 使用id为1的代码块中的变量
+python {cmd=true matplotlib=true} # 设置显示matplotlib代码块
+
+````
+
+参考：
+[1]:https://www.jianshu.com/p/7313d9840edc
+[2]:官方文档：https://shd101wyy.github.io/markdown-preview-enhanced/
+
+
