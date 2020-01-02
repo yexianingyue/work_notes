@@ -189,6 +189,15 @@ df.loc[df[0].str.conrains("GenId|GenLenth")]
 
 # 组合筛选时，每个条件都要添加括号
 df2 = df[(df[3]>95) & (df[3]<96)]
+
+# query 函数
+df.query('列名'>4 & '列名' < 5)
+```
+
+行筛选
+
+```python
+df[(df > 6).any(1)]
 ```
 
 ### 5.3 访问数据
@@ -225,6 +234,16 @@ df["列名"].str.replace("","") # 替换数据中的字符
 df['列名'].replace("","") # 更改数据
 
 df.drop("", axis=0) # axis=0删除行，1，删除列
+
+# 将df中大于10的值改为10
+df[df>10] = 10
+
+	
+# 设置某一列为索引，必须是列名称
+df.set_index('id_new')
+
+# 将索引变为第一列
+df.reset_index()
 ```
 
 ### 5.5 添加数据
@@ -280,6 +299,9 @@ df.sort_values(by=[], axsi=0, ascending=[],inplace=False,na_position='last')
 # 分别是升序，降序，升序,
 # 并且直接作用于原来的数据表
 df.sort_values(by=[1,2,column_name3,...], ascending=[True,False,True], inplace=True)
+
+df.sort_index(axis=1) # 对索引进行排序
+df.sort_index(axis=0) # 对列名进行排序
 ```
 
 ### 5.8 计数
@@ -322,6 +344,36 @@ df.ix[:, (df != df.ix[0]).any()]
 a = pd.read_clipboard(header=0, sep="\t")
 pd.pivot_table(a, index=['family'],columns=['HC>RA','p.signif'],values=['.y.'], aggfunc=[len], fill_value=0)
 ```
+
+### 5.13 pandas显示问题
+
+```python {cmd=true,id=0}
+import pandas as pd
+pd.set_option('expand_frame_repr', False) # 解决长度过长时，自动换行的问题
+pd.set_option("max_colwidth", int) # 设置显示的值的长度
+pd.set_option("max_column", int) # 设置显示的列数
+pd.set_option("max_rows", int) # 设置显示的行数
+```
+
+### 5.14、pandas挑选列名相同的列
+
+因为pandas如果读取文件时，设置header=0，出现相同的列名时，会自动在后面加.\d
+所以，为了挑选同名的列，可以设置header=None，然后对第0行进行筛选即可
+```python {cmd=true}
+import pandas as pd 
+df = pd.read_csv("./test_data/pandas_5.14.txt", header=0, sep="\t")
+print(df)
+
+```
+
+### 5.15、填充空值
+
+```python {cmd=true}
+import numpy as np
+import pandas as pd
+df = pd.DataFrame({"name":["apple", "pear", "pig", "dog", "cat"], "number_1":[1,np.nan,3,np.nan,5], "number_2":[np.nan, 2,3,4,5]})
+```
+
 ## 6、匿名函数
 
 C:/Users/yexia/Anaconda3/envs/rstudio/lib/R/library
@@ -467,6 +519,7 @@ nohup ./program > program.log 2>&1 & # nohup重定向
 ## 10. conda
 
 更改 __.condarc__ 可以设置conda的下载源
+windows会在用户加目录下，有.condarc文件，更改为一下内容即可
 ```shell
 channels:
   - defaults
@@ -482,11 +535,20 @@ custom_channels:
   pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
 ```
 
-服务器设置
+命令行更改
+
 ```shell
-# 在登入时不激活环境
-conda config --set auto_activate_base false
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+conda config --set show_channel_urls yes
+# 恢复默认下载源
+conda config --remove-key channels
 ```
+
+删除环境： `conda remove -n name --all # 删除环境中所有的包`
+重命名：&emsp;&nbsp;`conda create -n tf --clone rcnn`
+相当于clone，删除原环境即可
+
 
 ## 11.Git
 
@@ -537,7 +599,7 @@ print(np.array_split(a, 3)) # 将data分割成几分
 参考链接[点击这里](https://www.cnblogs.com/xingmuxin/p/8487665.html)
 ```shell
 # 下载
-scp -o  stricthostkeychecking=no root@192.168.1.1:/path/  ./
+scp  -P <prot>  -o  stricthostkeychecking=no root@192.168.1.1:/path/  ./
 ```
 
 ## 15、VIM
