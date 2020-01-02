@@ -376,7 +376,6 @@ df = pd.DataFrame({"name":["apple", "pear", "pig", "dog", "cat"], "number_1":[1,
 
 ## 6、匿名函数
 
-C:/Users/yexia/Anaconda3/envs/rstudio/lib/R/library
 
 ```python
 #!/usr/bin/python3
@@ -446,18 +445,18 @@ map( lambda x,y: True_value if condition else False_value, iterable_1,iterable_2
 
 每条reads只占用4行
 
-第一行就是Sequence Identity
+第一行就是sequence identity
 第二行是测序得到的碱基
 第三行是单独的 **+**
 第四行是碱基质量
 
-Sequence Identity
+sequence identity
 ```
-@<Instrument>:<Run Number>:<Flowcell ID>:<Lane>:<Title>:<x-pox>:<y-pos>:<Read>:<Is filtered>:<Control number>:<Index sequence>
+@<instrument>:<run number>:<flowcell id>:<lane>:<title>:<x-pox>:<y-pos>:<read>:<is filtered>:<control number>:<index sequence>
 ```
 
 格式如下：
-![Fastq](./Images/File_type/Fastq.png)
+![fastq](./images/file_type/fastq.png)
 
 ### 8.2、 .fasta
 
@@ -470,15 +469,15 @@ Sequence Identity
 &emsp;&emsp;省略
 
 
-### 8.3 GFF
+### 8.3 gff
 
 跑基因注释
 
 ```shell
 ##gff-version 3
-ctg123  .  exon  1300  1500  .  +  .  ID=exon00001
-ctg123  .  exon  1050  1500  .  +  .  ID=exon00002
-ctg123  .  exon  3000  3902  .  +  .  ID=exon00003
+ctg123  .  exon  1300  1500  .  +  .  id=exon00001
+ctg123  .  exon  1050  1500  .  +  .  id=exon00002
+ctg123  .  exon  3000  3902  .  +  .  id=exon00003
 ctg123  .  exon  5000  5500  .  +  .  ID=exon00004
 ctg123  .  exon  7000  9000  .  +  .  ID=exon00005
 ```
@@ -575,6 +574,46 @@ git checkout -- <file-name>
 # 添加新的远程地址
 git remote add origin ssh://serves@172.16.0.30/~/yafeng/.git
 ```
+中文显示问题
+```bash {cmd=true}
+git status # 不能显示中文时，先执行
+git config --global core.quotepath false
+
+# 如果git reflog不能显示中文，
+git config --global core.pager more
+
+```
+
+
+进入你的项目根目录
+
+1.设置git gui的界面编码
+
+`git config --global gui.encoding utf-8`
+
+2.设置 commit log 提交时使用 utf-8 编码，可避免服务器上乱码，同时与linux上的提交保持一致！
+```bash
+git config --global i18n.commitencoding utf-8
+
+git config --global i18n.logoutputencoding utf-8
+```
+
+注：
+
+windows系统默认编码为gbk，可改成gbk
+
+如果系统设置了：
+
+`export LANG=zh_CN.UTF-8`
+
+则日志输出编码设置为utf-8
+
+`git config --global i18n.logoutputencoding utf-8`
+
+3.在 /etc/profile 中添加：
+
+`export LESSCHARSET=utf-8`
+
 
 
 ## 12. numpy
