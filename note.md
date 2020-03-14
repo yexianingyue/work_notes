@@ -1,4 +1,10 @@
-&emsp;&emsp;
+---
+toc:
+  depth_from: 1
+  depth_to: 6
+  ordered: false
+---
+
 
 # __笔记__
 
@@ -165,7 +171,11 @@ df = pd.read_csv("file_neme" [,sep="", header=True])
 ### 5.1.2 保存
 ```python
 #!/usr/bin/python3
-result.to_csv(output_file, sep="", header=True, index=True)
+df.to_csv(output_file, sep="", header=True, index=True)
+df.to_excel('*.xlsx', sheet_name='', index=False)
+writer = pd.ExcelWriter("*.xlsx", mode='a')
+df.to_excel(writer, sheet_name='test_2')
+
 ```
 
 ### 5.2 筛选
@@ -319,7 +329,8 @@ df = df.groupby('user_id')['song_id'].value_counts().to_frame('count').reset_ind
 ```python
 
 pd.melt(data,)
-df.pivot('features','user_contig','feature_count') # 长 ——> 宽
+# 如果不指定values， 会有多层级所列名
+df.pivot(columns='features',index='user_contig',values='feature_count') # 长 ——> 宽
 ```
 
 ### 5.10 分割列
@@ -347,7 +358,7 @@ pd.pivot_table(a, index=['family'],columns=['HC>RA','p.signif'],values=['.y.'], 
 
 ### 5.13 pandas显示问题
 
-```python {cmd=true,id=0}
+```python 
 import pandas as pd
 pd.set_option('expand_frame_repr', False) # 解决长度过长时，自动换行的问题
 pd.set_option("max_colwidth", int) # 设置显示的值的长度
@@ -362,6 +373,8 @@ pd.set_option("max_rows", int) # 设置显示的行数
 ```python {cmd=true}
 import pandas as pd 
 df = pd.read_csv("./test_data/pandas_5.14.txt", header=0, sep="\t")
+cols=[i for i,x in enumerate(df.iloc[0,:]) if df.iloc[0,i]!=1]
+df1 = df.drop(cols,axis=1)
 print(df)
 
 ```
@@ -372,6 +385,33 @@ print(df)
 import numpy as np
 import pandas as pd
 df = pd.DataFrame({"name":["apple", "pear", "pig", "dog", "cat"], "number_1":[1,np.nan,3,np.nan,5], "number_2":[np.nan, 2,3,4,5]})
+```
+
+### 5.16、整张表处理(广播机制)
+
+```python
+# 每个值占每一列和的百分比
+df = df.div(df.sum(axis=0), axis=1)
+```
+
+### 5.17、pandas 天坑
+
+```python {cmd=true, id='5171'} 
+import pandas as pd
+df = pd.read_csv("./test_data/pandas_5.17.csv", header=0,sep="\t")
+print(df)
+```
+计算每列的和 __*axis=0*__
+``` python {cmd=true, id='5173'}
+import pandas as pd
+df = pd.read_csv("./test_data/pandas_5.17.csv", header=0,sep="\t")
+print(df.iloc[:,1:].sum(axis=0))
+```
+删除行 __*axis=0*__
+```python {cmd=true, id=5172}
+import pandas as pd
+df = pd.read_csv("./test_data/pandas_5.17.csv", header=0,sep="\t")
+print(df.drop(0, axis=0))
 ```
 
 ## 6、匿名函数
@@ -539,6 +579,12 @@ custom_channels:
 ```shell
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/menpo/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/peterjc123/
 conda config --set show_channel_urls yes
 # 恢复默认下载源
 conda config --remove-key channels
@@ -707,20 +753,102 @@ python setup.py sdist
 
 ## 20、vscode技巧
 
-1、运行代码块 code-chunk
-````python
+1、代码块 code-chunk
+
+运行代码块
+````python {.line-numbers, highlight=1}
 使用插件Markdown Preview Enhanced 可以运行python、shell、R...代码
 举例：
-```python {cmd=true id='1'}
+```python {cmd=true id='1', .line-numbers, highlight=1}
 a = {1:'1'}
 ```
 python {cmd=true continue="1" id="2"} # 使用id为1的代码块中的变量
 python {cmd=true matplotlib=true} # 设置显示matplotlib代码块
-
 ````
+
+2、表格
+
+```shell
+在设置中开启：enableExtendedTableSyntax
+```
+![vscode-skills](./Images/vscode-skills/表格1.png)
 
 参考：
 [1]:https://www.jianshu.com/p/7313d9840edc
 [2]:官方文档：https://shd101wyy.github.io/markdown-preview-enhanced/
+[3]:强烈推荐：https://shd101wyy.github.io/markdown-preview-enhanced/#/zh-cn/toc
 
+## 21、Linux 常见压缩/解压命令
+
+.tar/.war(tar是打包，不是压缩)
+
+>解包：tar xvf FileName.tar / FileName.war
+>打包：tar cvf FileName.tar DirName
+
+ .gz
+
+>解压 1：gunzip FileName.gz 
+>解压2：gzip -d FileName.gz 
+>压缩：gzip FileName 
+
+.tar.gz 和 .tgz
+
+>解压：tar zxvf FileName.tar.gz 
+>压缩：tar zcvf FileName.tar.gz DirName 
+
+.bz2
+
+>解压1：bzip2 -d FileName.bz2 
+>解压2：bunzip2 FileName.bz2 
+>压缩：bzip2 -z FileName 
+
+.tar.bz2
+
+>解压1：tar jxvf FileName.tar.bz2
+>解压2：tar --bzip xvf FileName.tar.bz2
+>压缩：tar jcvf FileName.tar.bz2 DirName  
+
+.bz
+
+>解压1：bzip2 -d FileName.bz 
+>解压2：bunzip2 FileName.bz 
+
+.xz
+
+>tar -Jxf FileName.tar.xz
+> 或 xz -d FileName.tar.xz ; tar xvf FileName.tar
+
+.tar.bz
+
+>解压：tar jxvf FileName.tar.bz 
+>压缩：未知 
+
+.Z
+
+>解压：uncompress FileName.Z 
+>压缩：compress FileName 
+
+.tar.Z
+
+>解压：tar Zxvf FileName.tar.Z 
+>压缩：tar Zcvf FileName.tar.Z DirName
+
+.zip
+
+>解压：unzip FileName.zip 
+>压缩：zip FileName.zip DirName 
+>压缩一个目录使用 -r 参数，-r 递归。例： $ zip -r FileName.zip DirName 
+
+.rar
+
+>解压：rar x FileName.rar 
+>压缩：rar a FileName.rar DirName 
+
+.rpm
+
+>解包：rpm2cpio FileName.rpm | cpio -div 
+
+.tar .tgz .tar.gz .tar.Z .tar.bz .tar.bz2 .zip .cpio .rpm .deb .slp .arj .rar .ace .lha .lzh .lzx .lzs .arc .sda .sfx .lnx .zoo .cab .kar .cpt .pit .sit .sea
+>解压：sEx x FileName.* 
+>压缩：sEx a FileName.* FileName 
 
